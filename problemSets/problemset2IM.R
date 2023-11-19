@@ -86,6 +86,5 @@ X1 <- "water"
 model1 <- lm(water~reserved, data = datfra)
 model1
 summary(model1)
-res <- resid(model1)
 plot(x=datfra$reserved, y=datfra$water, xlim=c(0,2), ylim=c(0,320))
 cor.test(datfra$reserved, datfra$water)
