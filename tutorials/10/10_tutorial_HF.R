@@ -27,7 +27,6 @@ lapply(c("stargazer","vioplot","arm","broom","ggplot2","fastDummies"),  pkgTest)
 # Set working directory for current folder
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 getwd()
-setwd("/Users/isabellameier/Desktop/StatsI_Fall2023")
 
 # Research questions: 
 # What is the relationship between education and Euroscepticism?
@@ -58,7 +57,7 @@ setwd("/Users/isabellameier/Desktop/StatsI_Fall2023")
 # Born in country (brncntr), 1: Yes, 2: No
 
 # Only include Ireland and relevant variables. 
-df <- read.csv("/Users/isabellameier/Desktop/StatsI_Fall2023/ESS10.csv")
+df <- read.csv("../../datasets/ESS10.csv")
 df_s <- df[df$cntry=="IE", c("euftf","edlvdie","eduyrs","hinctnta","trstplt","imwbcnt","gndr","agea","brncntr")]
 View(df_s)
 
@@ -88,10 +87,10 @@ typeof(df_s$edu_cat)
 df_s[(df_s == -67) | (df_s == -78) | (df_s == -89) | (df_s == 77) | (df_s == 88) | (df_s == 99) | (df_s == 999) | (df_s == 5555) | (df_s == 7777) | (df_s == 8888) | (df_s == 9999)] <- NA
 
 # Save dataset
-write.csv(df_s, "/Users/isabellameier/Desktop/StatsI_Fall2023/ess_euroscepticism.csv")
+write.csv(df_s, "../../datasets/ess_euroscepticism.csv")
 
 # Initial investigation ----------
-df <- read.csv("/Users/isabellameier/Desktop/StatsI_Fall2023/ess_euroscepticism.csv", row.names="X")
+df <- read.csv("../../datasets/ess_euroscepticism.csv", row.names="X")
 View(df)
 is.factor(df$edu_cat)
 
@@ -102,8 +101,8 @@ is.factor(df$edu_cat)
 # Descriptive plots
 par(mar = c(5, 5, 2, 2)) # Change margins in plot manually
 vioplot(df$euftf_re ~ df$edu_cat)
-plot(df$edlvdie,df$euftf_re)
-plot(jitter(df$edlvdie,2),jitter(df$euftf_re,2))
+plot(df$eduyrs,df$euftf_re)
+plot(jitter(df$eduyrs,2),jitter(df$euftf_re,2))
 
 # Simple model only considering socio-demographic variables
 model_base <- lm(euftf_re~gndr + agea + brncntr, data=df)
@@ -143,11 +142,11 @@ legend(70, 10, # Legend
 # the lower the level of Euroscepticism
 
 # Continuous independent variable
-model1 <- lm(euftf_re~edlvdie,data=df)
+model1 <- lm(euftf_re~eduyrs,data=df)
 summary(model1)
 
 # What is the prediction equation?
-# hat, euroscepticism=4.47-0.02*education years
+
 # Categorical independent variable (manually)
 
 # Create dummy variables 
@@ -163,6 +162,7 @@ df <- dummy_cols(df, select_columns = "edu_cat")
 # Fit model
 model1 <- lm(euftf_re~LeavingCertificate+AdvancedCertificate+Bachelor+Postgraduate,data=df)
 summary(model1)
+
 # Change reference category to leaving certificate 
 model1 <- lm(euftf_re~JuniorCycle+AdvancedCertificate+Bachelor+Postgraduate,data=df)
 summary(model1)
@@ -209,7 +209,7 @@ model3 <- lm(euftf_re~trstplt,data=df)
 summary(model3)
 
 # What is the prediction equation?
-# Which interpretations can we make? we can reject the null(p value very low)
+# Which interpretations can we make?
 
 # (4) Hypothesis 4 --------------
 
@@ -225,12 +225,12 @@ summary(model4)
 # (5) Putting it all together ------------
 
 # Education--Continuous independent variable
-model1 <- lm(euftf_re~edlvdie,data=df)
+model1 <- lm(euftf_re~eduyrs,data=df)
 summary(model1)
 nobs(model1) # Number of observations in model
 
 # Add economic dimension
-model_eco <- lm(euftf_re~edlvdie + hinctnta,data=df)
+model_eco <- lm(euftf_re~eduyrs + hinctnta,data=df)
 summary(model_eco)
 nobs(model_eco) # Number of observations in model
 # Default in lm to handle missing values is
@@ -247,30 +247,30 @@ df_na <- df[complete.cases(df), ]
 
 # Let's start again, using only complete cases (df_na)
 # Education--Continuous independent variable
-model1 <- lm(euftf_re~edlvdie,data=df_na)
+model1 <- lm(euftf_re~eduyrs,data=df_na)
 summary(model1)
 
 # Add economic dimension
-model_eco <- lm(euftf_re~edlvdie + hinctnta,data=df_na)
+model_eco <- lm(euftf_re~eduyrs + hinctnta,data=df_na)
 summary(model_eco)
 
-# What is the prediction equation? eu=4.20-0.013*edu-0.006*income
+# What is the prediction equation?
 # Which interpretations can we make?
 
 # Add political dimension
-model_pol <- lm(euftf_re~edlvdie + hinctnta + trstplt, data=df_na)
+model_pol <- lm(euftf_re~eduyrs + hinctnta + trstplt, data=df_na)
 summary(model_pol)
 
 # Which interpretations can we make?
 
 # Add cultural dimension
-model_cul <- lm(euftf_re~edlvdie + hinctnta + trstplt + imwbcnt, data=df_na)
+model_cul <- lm(euftf_re~eduyrs + hinctnta + trstplt + imwbcnt, data=df_na)
 summary(model_cul)
 
 # Which interpretations can we make?
-# the education effect is mediated by the attitudes towards imigration
+
 # Add socio-economic variables 
-model_final <- lm(euftf_re~edlvdie + hinctnta + trstplt + imwbcnt + gndr + agea + brncntr, data=df_na)
+model_final <- lm(euftf_re~eduyrs + hinctnta + trstplt + imwbcnt + gndr + agea + brncntr, data=df_na)
 summary(model_final)
 
 # Which interpretations can we make?
@@ -293,7 +293,7 @@ anova(model1, model_pol, test='F')
 summary(model_pol)
 
 # What about political dimension alone?
-model3 <- lm(euftf_re~edlvdie+trstplt,data=df_na) # Refit with df_na
+model3 <- lm(euftf_re~eduyrs+trstplt,data=df_na) # Refit with df_na
 anova(model1, model3, test='F')
 
 # Does adding cultural dimension improve fit?
@@ -301,7 +301,7 @@ anova(model1, model_cul, test='F')
 summary(model_cul)
 
 # What about cultural dimension alone?
-model4 <- lm(euftf_re~edlvdie+imwbcnt,data=df_na) # Refit with df_na
+model4 <- lm(euftf_re~eduyrs+imwbcnt,data=df_na) # Refit with df_na
 anova(model1, model4, test='F')
 
 # Visualizing regression models with categorical independent variables 
