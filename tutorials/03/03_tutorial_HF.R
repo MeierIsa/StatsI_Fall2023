@@ -5,7 +5,7 @@
 getwd()
 
 # Set working directory 
-setwd("/Users/hannahfrank/StatsI_Fall2023_prep")
+setwd("/Users/isabellameier/Desktop/StatsI_Fall2023")
 getwd()
 
 # Agenda
@@ -29,7 +29,7 @@ summary(df_not_tidy)
 # (a.) Contingency tables -------
 
 # Load tidy version of data
-# The data is prepared using the data_wraning.R script.
+# The data is prepared using the data_wrangling.R script.
 df <- readRDS("datasets/movies.rds")
 str(df)
 

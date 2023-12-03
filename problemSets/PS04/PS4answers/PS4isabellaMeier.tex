@@ -98,110 +98,35 @@ help(Prestige)
 	
 	\item [(a)]
 	Create a new variable \texttt{professional} by recoding the variable \texttt{type} so that professionals are coded as $1$, and blue and white collar workers are coded as $0$ (Hint: \texttt{ifelse}).
-\begin{lstlisting}l
-Prestige$Professional <- ifelse(Prestige$type == "prof", 1, 0)
-Prestige <- subset(Prestige, select = -type)
-head(Prestige)
-tail(Prestige)	                                
-\end{lstlisting}	                   
-\begin{verbatim}
-	                    education  income  women  prestige  census  Professional
-gov.administrators      13.11  12351   11.16     68.8   1113            1
-general.managers        12.26  25879    4.02     69.1   1130            1
-accountants             12.77   9271   15.70     63.4   1171            1
-purchasing.officers     11.42   8865    9.11     56.8   1175            1
-chemists                14.62   8403   11.68     73.5   2111            1
-physicists              15.64  11030    5.13     77.6   2113            1
-                    education  income  women  prestige  census  Professional
-train.engineers         8.49   8845     0.00     48.9   9131            0
-bus.drivers             7.58   5562     9.47     35.9   9171            0
-taxi.drivers            7.93   4224     3.59     25.1   9173            0
-longshoremen            8.37   4753     0.00     26.1   9313            0
-typesetters            10.00   6462    13.58     42.2   9511            0
-bookbinders             8.55   3617    70.87     35.2   9517            0
-\end{verbatim}
+	
+	\vspace{6cm}
 	
 	
 	\item [(b)]
 	Run a linear model with \texttt{prestige} as an outcome and \texttt{income}, \texttt{professional}, and the interaction of the two as predictors (Note: this is a continuous $\times$ dummy interaction.)
-\begin{lstlisting}
-model <- lm(prestige ~ income + Professional + income*Professional, data = Prestige)
-summary(model)
-\end{lstlisting}
-\begin{verbatim}
-Residuals:   
-           Min      1Q   Median      3Q     Max
-	        -14.852  -5.332  -1.272   4.658  29.932 
-   
-Coefficients:                      
-	                     Estimate   Std. Error t value Pr(>|t|)    
-(Intercept)         21.1422589  2.8044261   7.539 2.93e-11 ***
-income               0.0031709  0.0004993   6.351 7.55e-09 ***
-Professional        37.7812800  4.2482744   8.893 4.14e-14 ***
-income:Professional -0.0023257  0.0005675  -4.098 8.83e-05 ***
-
-Residual standard error: 8.012 on 94 degrees of freedom
-  (4 observations deleted due to missingness)
-Multiple R-squared:  0.7872,	Adjusted R-squared:  0.7804 
-F-statistic: 115.9 on 3 and 94 DF,  p-value: < 2.2e-16
-\end{verbatim}
+	
+	\vspace{6cm}
 	\item [(c)]
 	Write the prediction equation based on the result.
-\begin{equation}
-Y_i = b_0 + b_1*x_i +b_2*d_i + b_3*x_i*d_i
-\end{equation}
-\begin{equation}
-prestige = 21.14 + 0.003*income+ 37.78*Professional + -0.002*income*Professional
-\end{equation}	
 	
 \newpage
 	\item [(d)]
 	Interpret the coefficient for \texttt{income}.
-\begin{verbatim}
-	The coefficient for income of 0.003 means that for a 1 unit increase in income
-	is associated to a 0.003 increase in Prestige, holding other variables constant
-\end{verbatim}
+	
+	\vspace{10cm}	
 	\item [(e)]
 	Interpret the coefficient for \texttt{professional}.
-\begin{verbatim}
-	The coefficient for Professional suggests that the professional status 
-	(1 instead of zero) is asociated with a 37.78 increase in prestige.
-\end{verbatim}
 	
 	\newpage
 	\item [(f)]
 	What is the effect of a \$1,000 increase in income on prestige score for professional occupations? In other words, we are interested in the marginal effect of income when the variable \texttt{professional} takes the value of $1$. Calculate the change in $\hat{y}$ associated with a \$1,000 increase in income based on your answer for (c).
-\begin{equation}
-	prestige = 21.14 + 0.003*1000 +37.78*1 + (-0.002*1000*1)
-\end{equation}
-\begin{equation}
-	prestige = 61.92
-\end{equation}
-\begin{verbatim}
-	An increase in $1000 is associated with an expected increase of 61.92 units
-	in average prestige (^y) according to the prediction equation in (c)
-\end{verbatim}	
+	
+	\vspace{10cm}
+	
 	
 	\item [(g)]
 	What is the effect of changing one's occupations from non-professional to professional when her income is \$6,000? We are interested in the marginal effect of professional jobs when the variable \texttt{income} takes the value of $6,000$. Calculate the change in $\hat{y}$ based on your answer for (c).
-\begin{equation}
-	prestige_np = 21.14 + 0.003*6000 +37.78*0 + (-0.002*6000*0)
-\end{equation}
-\begin{equation}
-	prestige_np= 39.14
-\end{equation}
-\begin{equation}
-  prestige_pro = 21.14 + 0.003*6000 + 37.78*1 + (-0.002*6000*1)
-\end{equation}
-\begin{equation}
-prestige_pro = 64.92
-\end{equation}
-\begin{verbatim}
-The marginal effect of changing someone's occupation from non_professional 
-to professional is an increase 25.78 units in average prestige, when income
-is held constant.
-\end{verbatim}
-
+	
 	
 \end{enumerate}
 
@@ -236,47 +161,17 @@ a precinct that was adjacent to a precinct in the treatment group (since people 
 \vspace{.5cm}
 \begin{enumerate}
 	\item [(a)] Use the results from a linear regression to determine whether having these yard signs in a precinct affects vote share (e.g., conduct a hypothesis test with $\alpha = .05$).
-\begin{verbatim}
-	With the coefficient as 0.042 and the standard error as 0.016. we can do a t test
-	where:
-	t = 0.042/0.016 = 2.62
-	With the degree of freedom as df = N - k - 1 = 128
-	Using a t test table the critical value is 1.98. The t test value is greater than
-	the critical value. 
-	The results of the linear regression suggest that the presence of the yard 
-	signs affects Ken Cuccinelli's vote share and the result of the t test suggests 
-	that the effect is statistically significant and we can reject the null hyphotesis.
-	The null hyphothesis would be that the yard signs have no effect on Ken
-	Cuccinelli's vote share.
-\end{verbatim}
+	
 	\newpage		
 	\item [(b)]  Use the results to determine whether being
 	next to precincts with these yard signs affects vote
 	share (e.g., conduct a hypothesis test with $\alpha = .05$).
-\begin{verbatim}
-	With the coefficient as 0.042 and the standard error as 0.013. we can do a t test
-	where:
-	t = 0.042/0.013 = 3.23
-	With the degree of freedom as df = 128
-	Using a t test table the critical value is 1.98. The t test value is greater than
-	the critical value. 
-	The results of the linear regression suggest that the presence of the yard 
-	signs affects Ken Cuccinelli's vote share and the result of the t test suggests 
-	that the effect is statistically significant and we can reject the null hyphotesis.
-\end{verbatim}
+	
+	\vspace{7cm}
 	\item [(c)] Interpret the coefficient for the constant term substantively.
-\begin{verbatim}
-	The coefficient fo the constant term mean that on average, the baseline of
-	Ken C."s vote share  is 0.302 when two variables are at their reference levels.
-\end{verbatim}	
+	\vspace{7cm}
 	
 	\item [(d)] Evaluate the model fit for this regression.  What does this	tell us about the importance of yard signs versus other factors that are not modeled?
-\begin{verbatim}
-	The Rsquared value 0.094 indicatesthat 9.4% of the variation in Ken C's 
-	vote share is explained by the yard signs. The other 90.6% of the variation is not
-	explained by the model. We don't have enough information to infer the importance
-	of yard signs against other models. 
-\end{verbatim}
 	
 \end{enumerate}  
 

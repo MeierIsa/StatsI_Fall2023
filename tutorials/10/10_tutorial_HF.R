@@ -27,6 +27,7 @@ lapply(c("stargazer","vioplot","arm","broom","ggplot2","fastDummies"),  pkgTest)
 # Set working directory for current folder
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 getwd()
+setwd("/Users/isabellameier/Desktop/StatsI_Fall2023")
 
 # Research questions: 
 # What is the relationship between education and Euroscepticism?
@@ -57,7 +58,7 @@ getwd()
 # Born in country (brncntr), 1: Yes, 2: No
 
 # Only include Ireland and relevant variables. 
-df <- read.csv("../../datasets/ESS10.csv")
+df <- read.csv("/Users/isabellameier/Desktop/StatsI_Fall2023/ESS10.csv")
 df_s <- df[df$cntry=="IE", c("euftf","edlvdie","eduyrs","hinctnta","trstplt","imwbcnt","gndr","agea","brncntr")]
 View(df_s)
 
@@ -87,10 +88,10 @@ typeof(df_s$edu_cat)
 df_s[(df_s == -67) | (df_s == -78) | (df_s == -89) | (df_s == 77) | (df_s == 88) | (df_s == 99) | (df_s == 999) | (df_s == 5555) | (df_s == 7777) | (df_s == 8888) | (df_s == 9999)] <- NA
 
 # Save dataset
-write.csv(df_s, "../../datasets/ess_euroscepticism.csv")
+write.csv(df_s, "/Users/isabellameier/Desktop/StatsI_Fall2023/ess_euroscepticism.csv")
 
 # Initial investigation ----------
-df <- read.csv("../../datasets/ess_euroscepticism.csv", row.names="X")
+df <- read.csv("/Users/isabellameier/Desktop/StatsI_Fall2023/ess_euroscepticism.csv", row.names="X")
 View(df)
 is.factor(df$edu_cat)
 
@@ -146,7 +147,7 @@ model1 <- lm(euftf_re~edlvdie,data=df)
 summary(model1)
 
 # What is the prediction equation?
-
+# hat, euroscepticism=4.47-0.02*education years
 # Categorical independent variable (manually)
 
 # Create dummy variables 
@@ -161,7 +162,7 @@ df <- dummy_cols(df, select_columns = "edu_cat")
 
 # Fit model
 model1 <- lm(euftf_re~LeavingCertificate+AdvancedCertificate+Bachelor+Postgraduate,data=df)
-
+summary(model1)
 # Change reference category to leaving certificate 
 model1 <- lm(euftf_re~JuniorCycle+AdvancedCertificate+Bachelor+Postgraduate,data=df)
 summary(model1)
@@ -208,7 +209,7 @@ model3 <- lm(euftf_re~trstplt,data=df)
 summary(model3)
 
 # What is the prediction equation?
-# Which interpretations can we make?
+# Which interpretations can we make? we can reject the null(p value very low)
 
 # (4) Hypothesis 4 --------------
 
@@ -253,7 +254,7 @@ summary(model1)
 model_eco <- lm(euftf_re~edlvdie + hinctnta,data=df_na)
 summary(model_eco)
 
-# What is the prediction equation?
+# What is the prediction equation? eu=4.20-0.013*edu-0.006*income
 # Which interpretations can we make?
 
 # Add political dimension
@@ -267,7 +268,7 @@ model_cul <- lm(euftf_re~edlvdie + hinctnta + trstplt + imwbcnt, data=df_na)
 summary(model_cul)
 
 # Which interpretations can we make?
-
+# the education effect is mediated by the attitudes towards imigration
 # Add socio-economic variables 
 model_final <- lm(euftf_re~edlvdie + hinctnta + trstplt + imwbcnt + gndr + agea + brncntr, data=df_na)
 summary(model_final)
